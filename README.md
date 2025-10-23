@@ -60,9 +60,7 @@ habit-tracker/
 
 3. Create a `.env` file in the `backend` directory with your MongoDB URI:
    ```
-   MONGODB_URI=mongodb://localhost:27017/habit-tracker
-   PORT=5000
-   ```
+   MONGODB_URI=mongodb://localhost:27017/habit-tracker  # Replace with your MongoDB connection string
 
 4. Start the backend server:
    ```
@@ -91,6 +89,7 @@ The frontend files are in the `frontend` directory. Open `frontend/index.html` i
 
 Feel free to fork the repository and submit pull requests for improvements.
 
-## License
+## Repository
 
-This project is licensed under the ISC License.
+Check out the project on GitHub: [https://github.com/ABHAYBARMAN067/Habit-Tracker](https://github.com/ABHAYBARMAN067/Habit-Tracker)
+
