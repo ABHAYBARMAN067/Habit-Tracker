@@ -17,6 +17,27 @@ A simple web-based habit tracker application that allows users to track daily ha
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose
 - **Other:** CORS, dotenv
 
+## Project Structure
+
+```
+habit-tracker/
+├── README.md
+├── backend/
+│   ├── .gitignore
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   └── routes/
+│       └── habits.js
+└── frontend/
+    ├── index.html
+    ├── script.js
+    └── style.css
+```
+
+- **backend/**: Contains the Node.js/Express server, MongoDB models, and API routes.
+- **frontend/**: Contains the HTML, CSS, and JavaScript files for the client-side application.
+
 ## Installation
 
 ### Prerequisites
