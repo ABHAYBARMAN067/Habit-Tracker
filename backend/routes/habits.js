@@ -1,15 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const router = express.Router();
-
-const habitSchema = new mongoose.Schema({
-  user: String,
-  month: String,
-  habit: String,
-  day: Number,
-  status: String
-});
-const Habit = mongoose.model('Habit', habitSchema);
+const Habit = require('../models/Habit');
 
 router.get('/:user/:month', async (req, res) => {
   const { user, month } = req.params;

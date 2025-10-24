@@ -1,18 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Habit Tracker ✅❌</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
+
 <body>
-  <h1>Monthly Habit Tracker ✅❌</h1>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+    </div>
+    <h1>Monthly Habit Tracker ✅❌</h1>
+    <div class="nav-buttons" id="nav-buttons">
+      <!-- Buttons will be populated by JavaScript -->
+    </div>
+  </nav>
   <div class="month-header" id="monthHeader"></div>
   <div class="controls">
     <button onclick="changeMonth(-1)">⬅ Previous</button>
     <button onclick="changeMonth(1)">Next ➡</button>
+    <button onclick="addHabit()">+ Add Habit</button>
   </div>
 
   <div class="legend">
@@ -25,8 +36,9 @@
     <table id="habitTable"></table>
   </div>
 
-  <p class="note">Click a cell to cycle: Not marked → ✅ Done → ❌ Missed → Not marked. Data saved locally.</p>
-  <script src="script.js"></script>
+  <p class="note">Click a cell to cycle: Not marked → ✅ Done → ❌ Missed → Not marked. Data saved in MongoDB Atlas.</p>
+  <script src="src/script.js"></script>
 
 </body>
+
 </html>

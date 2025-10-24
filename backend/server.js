@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 const habitsRouter = require('./routes/habits');
+const authRouter = require('./routes/auth');
+const customHabitsRouter = require('./routes/customHabits');
 
 const app = express();
 
@@ -21,6 +23,8 @@ mongoose.connect(mongoURI, {
 
 // API routes
 app.use('/api/habits', habitsRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/custom-habits', customHabitsRouter);
 
 // Optional root route
 app.get('/', (req, res) => {
