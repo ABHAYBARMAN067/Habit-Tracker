@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Habit Tracker ✅❌</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Monthly Habit Tracker ✅❌</h1>
+  <div class="month-header" id="monthHeader"></div>
+  <div class="controls">
+    <button onclick="changeMonth(-1)">⬅ Previous</button>
+    <button onclick="changeMonth(1)">Next ➡</button>
+  </div>
+
+  <div class="legend">
+    <span class="done">✅ Done</span>
+    <span class="missed">❌ Missed</span>
+    <span class="empty">Not marked</span>
+  </div>
+
+  <div class="sheet">
+    <table id="habitTable"></table>
+  </div>
+
+  <p class="note">Click a cell to cycle: Not marked → ✅ Done → ❌ Missed → Not marked. Data saved locally.</p>
+  <script src="script.js"></script>
+
+</body>
+</html>
