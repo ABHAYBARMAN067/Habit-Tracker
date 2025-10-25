@@ -1,5 +1,3 @@
-const API_BASE = 'http://localhost:5000/api';
-
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
@@ -12,13 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (res.ok) {
+                const data = await login(email, password);
+                if (data.token) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', data.user.username);
                     window.location.href = 'index.html';
@@ -39,13 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch(`${API_BASE}/auth/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password })
-                });
-                const data = await res.json();
-                if (res.ok) {
+                const data = await signup(username, email, password);
+                if (data.message === 'User created successfully') {
                     messageDiv.textContent = 'Sign up successful! Please login.';
                 } else {
                     messageDiv.textContent = data.message;

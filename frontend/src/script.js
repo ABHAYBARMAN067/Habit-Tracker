@@ -1,7 +1,5 @@
 let habits = ["English", "Typing", "Coding", "Aptitude", "Reasoning", "Exercise", "Reading", "Meditation", "Journaling", "Learning"];
 let currentDate = new Date();
-const API_BASE = 'http://localhost:5000/api/habits';
-const CUSTOM_HABITS_API = 'http://localhost:5000/api/custom-habits';
 const token = localStorage.getItem('token');
 const USER = localStorage.getItem('user');
 if (!token || !USER) {
@@ -33,11 +31,8 @@ function logout() {
 // Load custom habits from backend
 async function loadCustomHabits() {
   try {
-    const res = await fetch(`${CUSTOM_HABITS_API}/${USER}`);
-    if (res.ok) {
-      const customHabits = await res.json();
-      habits = [...habits, ...customHabits];
-    }
+    const customHabits = await getCustomHabits(USER);
+    habits = [...habits, ...customHabits];
   } catch (err) {
     console.error('Failed to load custom habits:', err);
   }
@@ -57,14 +52,11 @@ async function renderTable() {
   // Fetch habits from backend
   let backendHabits = {};
   try {
-    const res = await fetch(`${API_BASE}/${USER}/${monthStr}`);
-    if (res.ok) {
-      const data = await res.json();
-      data.forEach(h => {
-        const key = `${h.habit}-${h.day}`;
-        backendHabits[key] = h.status;
-      });
-    }
+    const data = await getHabits(USER, monthStr);
+    data.forEach(h => {
+      const key = `${h.habit}-${h.day}`;
+      backendHabits[key] = h.status;
+    });
   } catch (err) {
     console.error('Failed to fetch habits:', err);
   }
@@ -143,11 +135,7 @@ async function setState(td, state) {
 
   // Update backend
   try {
-    await fetch(`${API_BASE}/update`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: USER, month: monthStr, habit, day: parseInt(day), status: state })
-    });
+    await updateHabit(USER, monthStr, habit, parseInt(day), state);
   } catch (err) {
     console.error('Failed to update backend:', err);
   }
@@ -161,16 +149,11 @@ async function addHabit() {
     const trimmedName = habitName.trim();
     if (!habits.includes(trimmedName)) {
       try {
-        const res = await fetch(`${CUSTOM_HABITS_API}/add`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user: USER, habit: trimmedName })
-        });
-        if (res.ok) {
+        const data = await addCustomHabit(USER, trimmedName);
+        if (data.message === 'Habit added successfully') {
           habits.push(trimmedName);
           renderTable();
         } else {
-          const data = await res.json();
           alert(data.message || 'Failed to add habit');
         }
       } catch (err) {
@@ -186,12 +169,8 @@ async function addHabit() {
 async function removeHabit(habit) {
   if (confirm(`Are you sure you want to remove "${habit}"?`)) {
     try {
-      const res = await fetch(`${CUSTOM_HABITS_API}/delete`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user: USER, habit })
-      });
-      if (res.ok) {
+      const data = await deleteCustomHabit(USER, habit);
+      if (data.message === 'Habit deleted successfully') {
         habits = habits.filter(h => h !== habit);
         renderTable();
       } else {
