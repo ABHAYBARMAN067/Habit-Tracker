@@ -1,4 +1,4 @@
-const API_BASE = 'https://habit-tracker-backend.onrender.com/api';
+const API_BASE = '';
 
 // Auth functions
 async function login(email, password) {
