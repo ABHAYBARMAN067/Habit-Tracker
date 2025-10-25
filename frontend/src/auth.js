@@ -1,22 +1,29 @@
+import { loginUser, signupUser } from "./api.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     const messageDiv = document.getElementById('message');
 
+    // ✅ LOGIN handler
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
             try {
-                const data = await login(email, password);
+                const data = await loginUser(email, password);
+
                 if (data.token) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', data.user.username);
+
+                    messageDiv.textContent = "Login Successful. Redirecting...";
                     window.location.href = 'index.html';
                 } else {
-                    messageDiv.textContent = data.message;
+                    messageDiv.textContent = data.message || 'Invalid credentials';
                 }
             } catch (err) {
                 messageDiv.textContent = 'Login failed';
@@ -24,22 +31,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ✅ SIGNUP handler
     if (signupForm) {
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
             try {
-                const data = await signup(username, email, password);
+                const data = await signupUser(username, email, password);
+
                 if (data.message === 'User created successfully') {
-                    messageDiv.textContent = 'Sign up successful! Please login.';
+                    messageDiv.textContent = "Signup successful. Please Login";
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 1500);
                 } else {
-                    messageDiv.textContent = data.message;
+                    messageDiv.textContent = data.message || 'Signup failed';
                 }
             } catch (err) {
-                messageDiv.textContent = 'Sign up failed';
+                messageDiv.textContent = 'Signup failed';
             }
         });
     }
