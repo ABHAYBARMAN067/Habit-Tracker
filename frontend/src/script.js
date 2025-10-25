@@ -1,3 +1,5 @@
+import { getHabits, updateHabit, getCustomHabits, addCustomHabit, deleteCustomHabit } from './api.js';
+
 let habits = ["English", "Typing", "Coding", "Aptitude", "Reasoning", "Exercise", "Reading", "Meditation", "Journaling", "Learning"];
 let currentDate = new Date();
 const token = localStorage.getItem('token');
