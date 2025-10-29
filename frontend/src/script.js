@@ -309,12 +309,13 @@ function renderCalendar() {
 function shareProgress() {
   const totalHabits = habits.length;
   const completedToday = habits.filter(habit => backendHabits[`${habit}-${currentDate.getDate()}`] === 'done').length;
-  const shareText = `I've completed ${completedToday}/${totalHabits} habits today on Habit Tracker! Check it out: ${window.location.href}`;
+  const appUrl = 'https://github.com/ABHAYBARMAN067/Habit-Tracker';
+  const shareText = `I've completed ${completedToday}/${totalHabits} habits today on Habit Tracker! Check it out: ${appUrl}`;
   if (navigator.share) {
     navigator.share({
       title: 'My Habit Progress',
       text: shareText,
-      url: window.location.href
+      url: appUrl
     });
   } else {
     navigator.clipboard.writeText(shareText).then(() => {
