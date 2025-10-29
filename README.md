@@ -6,16 +6,20 @@ A simple web-based habit tracker application that allows users to track daily ha
 
 - Track multiple habits (e.g., English, Typing, Coding, Aptitude, Reasoning, Exercise, Reading, Meditation, Journaling, Learning)
 - Add custom habits dynamically and remove them as needed
-- Monthly view with clickable cells to mark habits as Done (✅), Missed (❌), or Not Marked
+- Monthly table view with clickable cells to mark habits as Done (✅), Missed (❌), or Not Marked
+- Calendar view showing habits in a compact grid for each day
+- Toggle between table and calendar views
 - Responsive design for mobile and desktop
 - Local storage for offline use
 - Backend support for data persistence using MongoDB Atlas
 - Navigation between months
 - User authentication (login and signup)
+- Share daily progress via native share API or clipboard
+- Progress charts and achievements tracking
 
 ## Technologies Used
 
-- **Frontend:** HTML, CSS, JavaScript
+- **Frontend:** HTML, CSS, JavaScript, Chart.js
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, bcrypt
 - **Other:** CORS, dotenv
 
@@ -86,6 +90,9 @@ habit-tracker/
 
 The frontend files are in the `frontend` directory. Open `frontend/index.html` in a web browser to run the app. For full functionality, ensure the backend is running.
 
+**Dependencies:**
+- Chart.js (loaded via CDN in index.html for progress charts)
+
 ## Usage
 
 1. Open `frontend/login.html` in your browser to sign up or login.
@@ -94,7 +101,11 @@ The frontend files are in the `frontend` directory. Open `frontend/index.html` i
 4. Use the Previous/Next buttons to navigate between months.
 5. Click the "+ Add Habit" button to add custom habits.
 6. Click the ❌ button next to custom habits to remove them.
-7. Data is saved locally and synced with the backend if available.
+7. Toggle between table and calendar views using the "Toggle View" button.
+8. In calendar view, see habits displayed in a compact grid for each day.
+9. Share your daily progress using the "Share Progress" button.
+10. View progress charts and achievements below the habit table.
+11. Data is saved locally and synced with the backend if available.
 
 ## API Endpoints
 
