@@ -1,6 +1,7 @@
 import { getHabits, updateHabit, getCustomHabits, addCustomHabit, deleteCustomHabit } from './api.js';
 
-let habits = ["English", "Typing", "Coding", "Aptitude", "Reasoning", "Exercise", "Reading", "Meditation", "Journaling", "Learning"];
+// let habits = ["English", "Typing", "Coding", "Aptitude", "Reasoning", "Exercise", "Reading", "Meditation", "Journaling", "Learning"];
+let habits = []
 let currentDate = new Date();
 const token = localStorage.getItem('token');
 const USER = localStorage.getItem('user');
@@ -205,5 +206,10 @@ async function init() {
     hamburger.addEventListener('click', toggleMenu);
   }
 }
+
+// Expose functions to global scope for HTML onclick
+window.changeMonth = changeMonth;
+window.addHabit = addHabit;
+window.logout = logout;
 
 init();
