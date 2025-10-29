@@ -22,6 +22,14 @@ function updateNavbar() {
   }
 }
 
+// Hamburger menu toggle
+function toggleMenu() {
+  const navMenu = document.querySelector('.nav-menu');
+  const hamburger = document.getElementById('hamburger');
+  navMenu.classList.toggle('show');
+  hamburger.classList.toggle('active');
+}
+
 function logout() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
@@ -85,7 +93,8 @@ async function renderTable() {
     const habitText = document.createElement('span'); habitText.textContent = habit; habitCell.appendChild(habitText);
 
     // Add remove button for all habits
-    const removeBtn = document.createElement('button'); removeBtn.textContent = 'Remove'; removeBtn.className = 'remove-btn';
+    const removeBtn = document.createElement('button'); removeBtn.innerHTML = '&#128465;'; removeBtn.className = 'remove-btn';
+    removeBtn.title = 'Remove habit';
     removeBtn.onclick = () => removeHabit(habit);
     habitCell.appendChild(removeBtn);
 
@@ -189,6 +198,12 @@ async function init() {
   updateNavbar();
   await loadCustomHabits();
   renderTable();
+
+  // Add hamburger menu event listener
+  const hamburger = document.getElementById('hamburger');
+  if (hamburger) {
+    hamburger.addEventListener('click', toggleMenu);
+  }
 }
 
 init();

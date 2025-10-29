@@ -10,14 +10,21 @@
 
 <body>
   <nav class="navbar">
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+    <img src="assets/logo.png" alt="Habit Tracker Logo" class="logo">
+    <div class="nav-menu">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+      </div>
+      <div class="nav-buttons" id="nav-buttons">
+        <!-- Buttons will be populated by JavaScript -->
+      </div>
     </div>
-    <h1>Monthly Habit Tracker ✅❌</h1>
-    <div class="nav-buttons" id="nav-buttons">
-      <!-- Buttons will be populated by JavaScript -->
-    </div>
+    <button class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
   <div class="month-header" id="monthHeader"></div>
   <div class="controls">
