@@ -309,17 +309,15 @@ function renderCalendar() {
 function shareProgress() {
   const totalHabits = habits.length;
   const completedToday = habits.filter(habit => backendHabits[`${habit}-${currentDate.getDate()}`] === 'done').length;
-  const appUrl = 'https://github.com/ABHAYBARMAN067/Habit-Tracker';
-  const shareText = `I've completed ${completedToday}/${totalHabits} habits today on Habit Tracker! Check it out: ${appUrl}`;
+  const shareText = `I've completed ${completedToday}/${totalHabits} habits today on Habit Tracker!`;
   if (navigator.share) {
     navigator.share({
       title: 'My Habit Progress',
-      text: shareText,
-      url: appUrl
+      text: shareText
     });
   } else {
     navigator.clipboard.writeText(shareText).then(() => {
-      alert('Progress link copied to clipboard!');
+      alert('Progress copied to clipboard!');
     });
   }
 }
