@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Habit Tracker ✅❌</title>
   <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -41,6 +42,26 @@
 
   <div class="sheet">
     <table id="habitTable"></table>
+  </div>
+
+  <div class="charts-section">
+    <h3>Monthly Progress</h3>
+    <canvas id="progressChart"></canvas>
+  </div>
+
+  <div class="achievements-section">
+    <h3>Achievements</h3>
+    <div id="achievements"></div>
+  </div>
+
+  <div class="controls">
+    <button onclick="toggleView()">Toggle Calendar View</button>
+    <button onclick="shareProgress()">Share Progress</button>
+  </div>
+
+  <div id="calendarView" style="display: none;">
+    <h3>Calendar View</h3>
+    <div id="calendar"></div>
   </div>
 
   <p class="note">Click a cell to cycle: Not marked → ✅ Done → ❌ Missed → Not marked. Data saved in MongoDB Atlas.</p>

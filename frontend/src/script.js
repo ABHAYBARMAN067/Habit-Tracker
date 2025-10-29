@@ -3,6 +3,7 @@ import { getHabits, updateHabit, getCustomHabits, addCustomHabit, deleteCustomHa
 // let habits = ["English", "Typing", "Coding", "Aptitude", "Reasoning", "Exercise", "Reading", "Meditation", "Journaling", "Learning"];
 let habits = []
 let currentDate = new Date();
+let backendHabits = {};
 const token = localStorage.getItem('token');
 const USER = localStorage.getItem('user');
 if (!token || !USER) {
@@ -61,7 +62,7 @@ async function renderTable() {
   table.innerHTML = '';
 
   // Fetch habits from backend
-  let backendHabits = {};
+  backendHabits = {};
   try {
     const data = await getHabits(USER, monthStr);
     data.forEach(h => {
@@ -89,9 +90,10 @@ async function renderTable() {
 
   // Rows
   habits.forEach(habit => {
+    const streak = calculateStreak(habit, backendHabits, currentDate);
     const tr = document.createElement('tr');
     const habitCell = document.createElement('td'); habitCell.className = 'habit-name';
-    const habitText = document.createElement('span'); habitText.textContent = habit; habitCell.appendChild(habitText);
+    const habitText = document.createElement('span'); habitText.textContent = `${habit} (${streak})`; habitCell.appendChild(habitText);
 
     // Add remove button for all habits
     const removeBtn = document.createElement('button'); removeBtn.innerHTML = '&#128465;'; removeBtn.className = 'remove-btn';
@@ -120,10 +122,205 @@ async function renderTable() {
 
     table.appendChild(tr);
   });
+
+  // Render charts after table
+  const progressData = calculateProgressData(habits, backendHabits);
+  renderCharts(progressData);
+
+  // Render achievements
+  const achievements = checkAchievements(habits, backendHabits);
+  renderAchievements(achievements);
 }
 
 function cellKey(habit, year, month, day) {
   return `${STORE_PREFIX}::${habit.replace(/\s+/g, '_').toLowerCase()}::${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function calculateStreak(habit, backendHabits, currentDate) {
+  let streak = 0;
+  let checkDate = new Date(currentDate);
+  checkDate.setHours(0, 0, 0, 0); // Normalize to start of day
+
+  while (true) {
+    const day = checkDate.getDate();
+    const month = checkDate.getMonth();
+    const year = checkDate.getFullYear();
+    const key = `${habit}-${day}`;
+
+    if (backendHabits[key] === 'done') {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+function calculateProgressData(habits, backendHabits) {
+  const progressData = habits.map(habit => {
+    let done = 0;
+    let missed = 0;
+    let empty = 0;
+
+    for (let d = 1; d <= 31; d++) { // Assuming max 31 days
+      const key = `${habit}-${d}`;
+      const status = backendHabits[key];
+      if (status === 'done') done++;
+      else if (status === 'missed') missed++;
+      else empty++;
+    }
+
+    return { habit, done, missed, empty };
+  });
+
+  return progressData;
+}
+
+function renderCharts(progressData) {
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  const labels = progressData.map(d => d.habit);
+  const doneData = progressData.map(d => d.done);
+  const missedData = progressData.map(d => d.missed);
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Done',
+          data: doneData,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Missed',
+          data: missedData,
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+function checkAchievements(habits, backendHabits) {
+  const achievements = [];
+  habits.forEach(habit => {
+    const streak = calculateStreak(habit, backendHabits, currentDate);
+    if (streak >= 30) achievements.push(`🏆 30-Day Streak for ${habit}!`);
+    else if (streak >= 7) achievements.push(`🔥 7-Day Streak for ${habit}!`);
+    // Add more achievement logic as needed
+  });
+  return achievements;
+}
+
+function renderAchievements(achievements) {
+  const achievementsDiv = document.getElementById('achievements');
+  achievementsDiv.innerHTML = '';
+  if (achievements.length === 0) {
+    achievementsDiv.innerHTML = '<p>No achievements yet. Keep building streaks!</p>';
+  } else {
+    achievements.forEach(achievement => {
+      const p = document.createElement('p');
+      p.textContent = achievement;
+      achievementsDiv.appendChild(p);
+    });
+  }
+}
+
+function toggleView() {
+  const tableView = document.querySelector('.sheet');
+  const calendarView = document.getElementById('calendarView');
+  if (tableView.style.display === 'none') {
+    tableView.style.display = 'block';
+    calendarView.style.display = 'none';
+  } else {
+    tableView.style.display = 'none';
+    calendarView.style.display = 'block';
+    renderCalendar();
+  }
+}
+
+function renderCalendar() {
+  const calendarDiv = document.getElementById('calendar');
+  calendarDiv.innerHTML = '';
+  // Simple calendar implementation - can be enhanced with a library like FullCalendar
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+
+  // Create calendar grid
+  const calendar = document.createElement('div');
+  calendar.className = 'calendar-grid';
+
+  // Days of week header
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  daysOfWeek.forEach(day => {
+    const dayHeader = document.createElement('div');
+    dayHeader.className = 'calendar-day-header';
+    dayHeader.textContent = day;
+    calendar.appendChild(dayHeader);
+  });
+
+  // Empty cells for days before first day of month
+  for (let i = 0; i < firstDay; i++) {
+    const emptyCell = document.createElement('div');
+    emptyCell.className = 'calendar-day empty';
+    calendar.appendChild(emptyCell);
+  }
+
+  // Days of month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dayCell = document.createElement('div');
+    dayCell.className = 'calendar-day';
+    dayCell.innerHTML = `<strong>${d}</strong>`;
+    // Add habit status for each habit on this day in a grid format
+    const habitGrid = document.createElement('div');
+    habitGrid.className = 'habit-grid';
+    habits.forEach(habit => {
+      const status = backendHabits[`${habit}-${d}`];
+      const habitIcon = document.createElement('span');
+      habitIcon.className = 'habit-icon';
+      if (status === 'done') habitIcon.textContent = '✅';
+      else if (status === 'missed') habitIcon.textContent = '❌';
+      else habitIcon.textContent = '○';
+      habitGrid.appendChild(habitIcon);
+    });
+    dayCell.appendChild(habitGrid);
+    calendar.appendChild(dayCell);
+  }
+
+  calendarDiv.appendChild(calendar);
+}
+
+function shareProgress() {
+  const totalHabits = habits.length;
+  const completedToday = habits.filter(habit => backendHabits[`${habit}-${currentDate.getDate()}`] === 'done').length;
+  const shareText = `I've completed ${completedToday}/${totalHabits} habits today on Habit Tracker! Check it out: ${window.location.href}`;
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Habit Progress',
+      text: shareText,
+      url: window.location.href
+    });
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Progress link copied to clipboard!');
+    });
+  }
 }
 
 function cycleCell(td) {
@@ -148,6 +345,9 @@ async function setState(td, state) {
   // Update backend
   try {
     await updateHabit(USER, monthStr, habit, parseInt(day), state);
+    // Re-render achievements after state change
+    const achievements = checkAchievements(habits, backendHabits);
+    renderAchievements(achievements);
   } catch (err) {
     console.error('Failed to update backend:', err);
   }
@@ -211,5 +411,7 @@ async function init() {
 window.changeMonth = changeMonth;
 window.addHabit = addHabit;
 window.logout = logout;
+window.toggleView = toggleView;
+window.shareProgress = shareProgress;
 
 init();
